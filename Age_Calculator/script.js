@@ -1,50 +1,49 @@
-let userInput = document.getElementById("date");
-userInput.max = new Date().toISOString().split("T")[0];
-let result = document.getElementById("result");
+document.addEventListener("DOMContentLoaded", () => {
+  const userInput = document.getElementById("date");
+  userInput.max = new Date().toISOString().split("T")[0];
+});
 
 function calculateAge() {
-  let birthDate = new Date(userInput.value);
+  const userInput = document.getElementById("date");
+  const result = document.getElementById("result");
 
-  let d1 = birthDate.getDate();
-  let m1 = birthDate.getMonth() + 1;
-  let y1 = birthDate.getFullYear();
-
-  let today = new Date();
-
-  let d2 = today.getDate();
-  let m2 = today.getMonth() + 1;
-  let y2 = today.getFullYear();
-
-  let d3, m3, y3;
-
-  y3 = y2 - y1;
-
-  if (m2 >= m1) {
-    m3 = m2 - m1;
-  } else {
-    y3--;
-    m3 = 12 + m2 - m1;
+  if (!userInput.value) {
+    result.innerHTML = "<p>Please select a valid date.</p>";
+    return;
   }
 
-  if (d2 >= d1) {
-    d3 = d2 - d1;
-  } else {
-    m3--;
-    d3 = getDaysInMonth(y1, m1) + d2 - d1;
-  }
+  const birthDate = new Date(userInput.value);
+  const today = new Date();
 
-  if (m3 < 0) {
-    m3 = 11;
-    y3--;
-  }
+  const ageData = getAgeData(birthDate, today);
 
   result.innerHTML = `
-  <p>Your Birth Date is ${d1}/${m1}/${y1}</p>
-  <p>Todays Date is: ${d2}/${m2}/${y2}</p>
-  <p>You are ${y3} years, ${m3} months and ${d3} days<p>
-  `;
+      <p>Your Birth Date is: ${birthDate.toLocaleDateString()}</p>
+      <p>Today's Date is: ${today.toLocaleDateString()}</p>
+      <p>You are ${ageData.years} years, ${ageData.months} months, and ${
+    ageData.days
+  } days old.</p>
+    `;
+}
+
+function getAgeData(birthDate, today) {
+  let years = today.getFullYear() - birthDate.getFullYear();
+  let months = today.getMonth() - birthDate.getMonth();
+  let days = today.getDate() - birthDate.getDate();
+
+  if (days < 0) {
+    months--;
+    days += getDaysInMonth(today.getFullYear(), today.getMonth());
+  }
+
+  if (months < 0) {
+    years--;
+    months += 12;
+  }
+
+  return { years, months, days };
 }
 
 function getDaysInMonth(year, month) {
-  return new Date(year, month, 0).getDate();
+  return new Date(year, month + 1, 0).getDate();
 }

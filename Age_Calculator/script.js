@@ -1,9 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
   const userInput = document.getElementById("date");
+  const calculateButton = document.getElementById("calculateButton");
+
   userInput.max = new Date().toISOString().split("T")[0];
+
+  calculateButton.addEventListener("click", calculateAge);
 });
 
-function calculateAge() {
+const calculateAge = () => {
   const userInput = document.getElementById("date");
   const result = document.getElementById("result");
 
@@ -24,9 +28,9 @@ function calculateAge() {
     ageData.days
   } days old.</p>
     `;
-}
+};
 
-function getAgeData(birthDate, today) {
+const getAgeData = (birthDate, today) => {
   let years = today.getFullYear() - birthDate.getFullYear();
   let months = today.getMonth() - birthDate.getMonth();
   let days = today.getDate() - birthDate.getDate();
@@ -42,8 +46,6 @@ function getAgeData(birthDate, today) {
   }
 
   return { years, months, days };
-}
+};
 
-function getDaysInMonth(year, month) {
-  return new Date(year, month + 1, 0).getDate();
-}
+const getDaysInMonth = (year, month) => new Date(year, month + 1, 0).getDate();
